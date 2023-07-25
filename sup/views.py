@@ -2,6 +2,8 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login
 from .models import SUPBoard, RentalSlot
 from .forms import CreateUserForm
+from django.contrib.auth.decorators import login_required
+
 
 def home(request):
     return render(request, 'sup/home.html')
@@ -14,7 +16,7 @@ def login_view(request):
         user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)
-            return redirect('home')
+            return redirect('sup:home')
     return render(request, 'sup/login.html')
 
 def register_view(request):
@@ -24,15 +26,13 @@ def register_view(request):
         if form.is_valid():
             user = form.save()
             login(request, user)
-            return redirect('home')
+            return redirect('sup:home')
     else:
         form = CreateUserForm()
     return render(request, 'sup/register.html', {'form': form})
 
+@login_required
 def rent_sups(request):
-    if not request.user.is_authenticated:
-        return redirect('login')
-
     if request.method == 'POST':
         # Handle SUP rental form submission
         sup_board_id = request.POST.get('sup_board')

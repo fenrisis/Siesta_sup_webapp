@@ -1,12 +1,12 @@
 from django import forms
-from django.contrib.auth.models import User
 from django.core.validators import MinLengthValidator
+from .models import CustomUser  # Update the import
 
 class CreateUserForm(forms.ModelForm):
     password = forms.CharField(widget=forms.PasswordInput)
 
     class Meta:
-        model = User
+        model = CustomUser  # Use CustomUser model here
         fields = ['username', 'password']
 
         labels = {
