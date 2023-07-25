@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Rent SUPs</title>
+</head>
+<body>
+    <h1>Rent SUP Boards</h1>
+    {% if user.is_authenticated %}
+        <form method="post">
+            {% csrf_token %}
+            <label for="sup_board">Select SUP Board:</label>
+            <select name="sup_board" required>
+                {% for sup_board in sup_boards %}
+                    <option value="{{ sup_board.id }}">{{ sup_board.name }}</option>
+                {% endfor %}
+            </select>
+            <br>
+            <label for="rental_date">Select Rental Date:</label>
+            <input type="date" name="rental_date" required>
+            <br>
+            <input type="submit" value="Rent">
+        </form>
+    {% else %}
+        <p>You need to log in to rent SUP boards.</p>
+        <a href="{% url 'sup_rental:login' %}">Login</a>
+    {% endif %}
+</body>
+</html>
