@@ -1,9 +1,6 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Rent SUPs</title>
-</head>
-<body>
+{% extends 'sup/base.html' %}
+
+{% block content %}
     <h1>Rent SUP Boards</h1>
     {% if user.is_authenticated %}
         <form method="post">
@@ -15,14 +12,14 @@
                 {% endfor %}
             </select>
             <br>
-            <label for="rental_date">Select Rental Date:</label>
-            <input type="date" name="rental_date" required>
+            <label for="date">Select Rental Date:</label>
+            <input type="date" name="date" required>
             <br>
             <input type="submit" value="Rent">
         </form>
     {% else %}
         <p>You need to log in to rent SUP boards.</p>
-        <a href="{% url 'sup_rental:login' %}">Login</a>
+        <a href="{% url 'sup:login' %}">Login</a>
     {% endif %}
-</body>
-</html>
+{% endblock %}
+

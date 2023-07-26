@@ -1,0 +1,23 @@
+{% extends 'sup/base.html' %}
+
+{% block content %}
+    <h1>Select Seats for SUP Rental</h1>
+    {% if user.is_authenticated %}
+        <form method="post">
+            {% csrf_token %}
+            <input type="hidden" name="rental_slot_id" value="{{ rental_slot.id }}">
+            <label for="seat1">Seat 1</label>
+            <input type="checkbox" name="selected_seats" value="seat1">
+            <br>
+            <label for="seat2">Seat 2</label>
+            <input type="checkbox" name="selected_seats" value="seat2">
+            <br>
+            <!-- Add more seats here as needed -->
+
+            <input type="submit" value="Submit">
+        </form>
+    {% else %}
+        <p>You need to log in to select seats.</p>
+        <a href="{% url 'sup:login' %}">Login</a>
+    {% endif %}
+{% endblock %}

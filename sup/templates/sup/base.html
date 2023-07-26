@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{% block title %}{% endblock %}</title>
+</head>
+<body>
+    <nav>
+        <ul>
+            <li><a href="{% url 'sup:home' %}">Home</a></li>
+            {% if user.is_authenticated %}
+                <li><a href="{% url 'sup:rent_sups' %}">Rent SUPs</a></li>
+                <li><a href="{% url 'sup:logout' %}">Logout</a></li>
+                <li><a href="#">Welcome, {{ user.username }}</a></li>
+            {% else %}
+                <li><a href="{% url 'sup:login' %}">Login</a></li>
+                <li><a href="{% url 'sup:register' %}">Register</a></li>
+            {% endif %}
+        </ul>
+    </nav>
+    <div>
+        {% block content %}{% endblock %}
+    </div>
+</body>
+</html>
