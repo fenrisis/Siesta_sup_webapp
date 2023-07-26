@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login, logout
-from .models import SUPBoard, RentalSlot
+from .models import SUPBoard, RentalSlot, Order
 from .forms import CreateUserForm
 from django.contrib.auth.decorators import login_required
 from datetime import time
@@ -73,7 +73,7 @@ def rent_sups(request):
 def select_seats(request):
     if request.method == 'POST':
         # Get the selected seats from the submitted form data
-        selected_seats = request.POST.getlist('selected_seats')
+        selected_seats = int(request.POST.get('selected_seats'))
         rental_slot_id = request.session.get('rental_slot_id')
 
         # Update the RentalSlot object with the selected seats
@@ -84,6 +84,25 @@ def select_seats(request):
         # Clear the stored rental_slot_id from the session
         del request.session['rental_slot_id']
 
-        return redirect('sup:home')  # Redirect to the home page or another appropriate page
+        # Calculate the total amount for the order
+        total_amount = selected_seats * rental_slot.sup_board.price_per_seat
+
+        # Create a new Order object
+        user = request.user
+        order = Order.objects.create(
+            rental_slot=rental_slot,
+            user=user,
+            total_amount=total_amount
+        )
+
+        return redirect('sup:order_detail', id=order.id)  # Redirect to the order detail page
 
     return render(request, 'sup/select_seats.html')
+
+@login_required
+def order_detail(request, id=None):
+    order = get_object_or_404(Order, id=id)
+    context = {
+        'order': order,
+    }
+    return render(request, 'sup/order_detail.html', context)
